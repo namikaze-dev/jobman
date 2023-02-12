@@ -42,6 +42,32 @@ class UserModel {
             throw err;
         }
     }
+
+    async update(user) {
+        try {
+            const stmt = `
+            UPDATE users 
+            SET name = $1, email = $2, password_hash = $3, activated = $4, version = version + 1
+            WHERE id = $5 AND version = $6        
+            RETURNING version`;
+            const args = [user.name, user.email, user.password_hash, user.activated, user.id, user.version];
+
+            const result = await this.db.query(stmt, args);
+
+            // race condition check
+            if (result.rowCount == 0) {
+                throw new Conflict();
+            }
+
+            user.version = result.rows[0].version;
+        } catch (err) {
+            // code 23505 denotes error code of unique constraint violation
+            if (err.code == '23505') {
+                throw new Conflict('user email conflict');
+            }
+            throw err;
+        }
+    }
 }
 
 module.exports = UserModel;
