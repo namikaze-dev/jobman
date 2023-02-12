@@ -1,0 +1,3 @@
+ALTER TABLE jobs ADD COLUMN apply_url TEXT;
+
+ALTER TABLE jobs ALTER COLUMN apply_url SET NOT NULL;
