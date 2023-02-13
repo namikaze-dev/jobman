@@ -1,6 +1,7 @@
 'use strict'
 
 const { Conflict, NotFound } = require('../lib/errors/http_errors');
+const bcrypt = require('bcrypt');
 
 class UserModel {
     constructor(dbClient) {
@@ -12,12 +13,12 @@ class UserModel {
             const stmt = `
             INSERT INTO users (name, email, password_hash, activated)
             VALUES ($1, $2, $3, false)
-            RETURNING id, created_at, version`;
+            RETURNING *`;
             const args = [user.name, user.email, user.password_hash];
 
             const result = await this.db.query(stmt, args);
             
-            Object.assign(user, result.rows[0]);
+            return result.rows[0];
         } catch (err) {
             // code 23505 denotes error code of unique constraint violation
             if (err.code == '23505') {
