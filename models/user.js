@@ -69,6 +69,15 @@ class UserModel {
             throw err;
         }
     }
+
+
+    async hashPassword(password) {
+        return await bcrypt.hash(password, 10);
+    }
+
+    async validatePassword(password, providedPassword) {
+        return await bcrypt.compare(password, providedPassword);
+    }
 }
 
 module.exports = UserModel;
