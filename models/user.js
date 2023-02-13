@@ -57,14 +57,14 @@ class UserModel {
 
             // race condition check
             if (result.rowCount == 0) {
-                throw new Conflict();
+                throw new Conflict('edit conflict');
             }
 
             user.version = result.rows[0].version;
         } catch (err) {
             // code 23505 denotes error code of unique constraint violation
             if (err.code == '23505') {
-                throw new Conflict('user email conflict');
+                throw new Conflict('user email edit conflict');
             }
             throw err;
         }
