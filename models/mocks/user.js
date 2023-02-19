@@ -44,6 +44,11 @@ const userModel = {
             version: 1,
         }
         this._users.push(user)
+        return user;
+    },
+
+    async hashPassword(password) {
+        return Buffer.from(password);
     }
 }
 
