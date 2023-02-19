@@ -70,7 +70,7 @@ describe('POST /signup', () => {
         return request(app)
             .post('/signup')
             .send({
-                email: "test@email.com",
+                email: "test@gmail.com",
                 name: "test",
                 password: "password"
             })
@@ -78,15 +78,13 @@ describe('POST /signup', () => {
                 expect(resp.statusCode).toBe(201);
                 expect(resp.header['content-type']).toMatch(/json/);
                 console.log(resp.body);
-                expect(resp.body).toEqual(
-                    expect.objectContaining({
-                        id: expect.any(Number),
-                        name: "test",
-                        email: "test@gmail.com",
-                        activated: false,
-                        created_at: expect.any(String),
-                    })
-                )
+                expect(resp.body).toEqual({
+                    id: expect.any(Number),
+                    name: "test",
+                    email: "test@gmail.com",
+                    activated: false,
+                    created_at: expect.any(String),
+                })
             })
     })
 })
