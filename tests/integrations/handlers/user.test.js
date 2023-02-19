@@ -66,7 +66,7 @@ describe('POST /signup', () => {
             })
     })
 
-    it('should respond with status OK for valid input', () => {
+    it('should respond with status CREATED for valid input', () => {
         return request(app)
             .post('/signup')
             .send({
@@ -75,7 +75,7 @@ describe('POST /signup', () => {
                 password: "password"
             })
             .then(resp => {
-                expect(resp.statusCode).toBe(200);
+                expect(resp.statusCode).toBe(201);
                 expect(resp.header['content-type']).toMatch(/json/);
                 console.log(resp.body);
                 expect(resp.body).toEqual(
