@@ -2,20 +2,14 @@
 
 const express = require('express');
 
-const db = require('./config/db');
-const Models = new require('../jobman/models/base.js');
+module.exports = (env) => {
+    const app = express();
 
-const app = express();
+    // register middlewares
+    app.use(express.json());
 
-// setup dependencies
-const env = {
-    models: new Models(db)
-};
+    // register routes
+    app.use(require('./routes/user')(env));
 
-// register middlewares
-app.use(express.json());
-
-// register routes
-app.use(require('./routes/user')(env));
-
-module.exports = app;
+    return app;
+}
