@@ -28,8 +28,7 @@ const signup = env => {
             input.password_hash = await env.models.users.hashPassword(input.password);
 
             const user = await env.models.users.insert(input);
-            console.log(sanitizer.user(user));
-            res.send(sanitizeUser(user));
+            res.send(sanitizer.user(user));
         } catch (err) {
             if (err instanceof Conflict) {
                 failedValidationResponse(res, {"email": "a user with this email already exists"});
