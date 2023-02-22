@@ -17,6 +17,27 @@ const generateToken = (userId, expiry, type) => {
     return token;
 }
 
+class TokenModel {
+    constructor(client) {
+        this.db = client;
+    }
+
+    // helper to generate and insert at once
+    async create(userId, expiry, type) {
+        const token = generateToken(userId, expiry, type);
+        await this.insert(userId, token);
+        return token;
+    }
+
+    async insert(userId, token) {
+        await this.db.query(
+            `INSERT INTO tokens (user_id, hash, expiry, type)
+              VALUES ($1, $2, $3, $4)`,
+            [userId, token.hash, token.expiry, token.type]
+        );
+    }
+}
+
 
 
 module.exports = {
