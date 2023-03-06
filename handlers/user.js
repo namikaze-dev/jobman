@@ -4,7 +4,7 @@ const sanitizer = require("../helpers/sanitizer");
 const sendMail = require('../helpers/email');
 const { Validator } = require('node-input-validator');
 const { failedValidationResponse, serverErrorResponse } = require("../helpers/errors");
-const { Conflict } = require('../lib/errors/http_errors');
+const { Conflict, NotFound } = require('../lib/errors/http_errors');
 
 const signup = env => {
     return async (req, res) => {
@@ -51,8 +51,33 @@ const signup = env => {
 
 const activated = env => {
     return async (req, res) => {
-        const token = req.params.token;
-        res.send(token)
+        try {
+            const v = new Validator(req.params, {
+                token: 'required|minLength:26|maxLength:26',
+            });
+
+            if (!await v.check()) {
+                failedValidationResponse(res, sanitizer.validationErr(v.errors));
+                return;
+            }
+
+            const token = req.params.token;
+
+            const owner = await env.models.users.getForToken(token);
+            owner.activated = true;
+            await env.models.update(owner);
+
+            // TODO: delete token for user
+
+            res.status(201).send(sanitizer.user(owner));
+        } catch (err) {
+            if (err instanceof NotFound) {
+                failedValidationResponse(res, { "token": "invalid/expired token" });
+                return;
+            }
+
+            console.error(err);
+        }
     }
 }
 

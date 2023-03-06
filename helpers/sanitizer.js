@@ -18,7 +18,7 @@ const userReplacer = (key, val) => {
 const validationErrReplacer = (key, val) => {
     if (key == 'rule') {
         return undefined;
-    } else if (['name', 'email', 'password'].includes(key)) {
+    } else if (['name', 'email', 'password', 'token'].includes(key)) {
         return val.message;
     }
     return val;
