@@ -77,7 +77,6 @@ describe('POST /signup', () => {
             .then(resp => {
                 expect(resp.statusCode).toBe(201);
                 expect(resp.header['content-type']).toMatch(/json/);
-                console.log(resp.body);
                 expect(resp.body).toEqual({
                     id: expect.any(Number),
                     name: "test",
