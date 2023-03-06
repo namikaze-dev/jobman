@@ -70,6 +70,27 @@ class UserModel {
         }
     }
 
+    async getForToken(token, type) {
+        try {
+            const result = await this.db.query(
+                `SELECT name, email, password_hash, activated, version 
+                  FROM users 
+                  JOIN tokens ON id = user_id
+                  WHERE hash = $1
+                  AND type = $2
+                  AND expiry > $3`,
+                [token, type, new Date()]
+            );
+
+            if (result.rowCount == 0) {
+                throw new NotFound('no user exists for token')
+            }
+
+            return result.rows[0];
+        } catch (err) {
+            throw err;
+        }
+    }
 
     async hashPassword(password) {
         return await bcrypt.hash(password, 10);
