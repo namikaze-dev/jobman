@@ -1,8 +1,9 @@
 'use strict'
 
+const sanitizer = require("../helpers/sanitizer");
+const sendMail = require('../helpers/email');
 const { Validator } = require('node-input-validator');
 const { failedValidationResponse, serverErrorResponse } = require("../helpers/errors");
-const sanitizer = require("../helpers/sanitizer");
 const { Conflict } = require('../lib/errors/http_errors');
 
 const signup = env => {
@@ -28,10 +29,19 @@ const signup = env => {
             input.password_hash = await env.models.users.hashPassword(input.password);
 
             const user = await env.models.users.insert(input);
+
+            setImmediate(async () => {
+                try {
+                    await sendMail(user.email, "Welcome to Jobman", "user_welcome", { token: null })
+                } catch (err) {
+                    console.error(err);
+                }
+            })
+
             res.status(201).send(sanitizer.user(user));
         } catch (err) {
             if (err instanceof Conflict) {
-                failedValidationResponse(res, {"email": "a user with this email already exists"});
+                failedValidationResponse(res, { "email": "a user with this email already exists" });
                 return
             }
             serverErrorResponse(res, err);
@@ -39,6 +49,14 @@ const signup = env => {
     }
 }
 
+const activated = env => {
+    return async (req, res) => {
+        const token = req.params.token;
+        res.send(token)
+    }
+}
+
 module.exports = {
-    signup
+    signup,
+    activated
 }
