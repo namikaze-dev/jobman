@@ -2,7 +2,8 @@
 
 const db = require('./config/db');
 const Models = new require('../jobman/models/base.js');
-const appFactory  = require('./app');
+const appFactory = require('./app');
+require('dotenv').config();
 
 // setup dependencies
 const env = {
