@@ -15,9 +15,8 @@ const transporter = nodemailer.createTransport({
 });
 
 const sender = process.env.EMAIL_SENDER;
-
 const send = async (recipient, subject, tmplName, data) => {
-    const source = await fs.readFile(path.join("../templates", tmplName + ".html"), 'utf-8');
+    const source = await fs.readFile(path.resolve(__dirname, "../templates", tmplName + ".html"), 'utf-8');
     const template = handlebars.compile(source);
 
     const options = {
@@ -30,6 +29,4 @@ const send = async (recipient, subject, tmplName, data) => {
     await transporter.sendMail(options);
 }
 
-module.exports = {
-    send
-}
+module.exports = send;
