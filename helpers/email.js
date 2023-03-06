@@ -1,11 +1,13 @@
 'use strict'
 
 const fs = require('fs/promises');
+const path = require('path');
 const nodemailer = require('nodemailer');
 const handlebars = require('handlebars');
 
 const transporter = nodemailer.createTransport({
-    service: process.env.EMAIL_HOST,
+    host: process.env.EMAIL_HOST,
+    port: 587,
     auth: {
         user: process.env.EMAIL_USERNAME,
         pass: process.env.EMAIL_PASSWORD
@@ -15,7 +17,7 @@ const transporter = nodemailer.createTransport({
 const sender = process.env.EMAIL_SENDER;
 
 const send = async (recipient, subject, tmplName, data) => {
-    const source = await fs.readFile(tmplName, 'utf-8');
+    const source = await fs.readFile(path.join("../templates", tmplName + ".html"), 'utf-8');
     const template = handlebars.compile(source);
 
     const options = {
