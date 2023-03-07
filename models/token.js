@@ -41,5 +41,6 @@ class TokenModel {
 
 
 module.exports = {
-    generateToken
+    generateToken,
+    TokenModel
 }
