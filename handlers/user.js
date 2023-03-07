@@ -67,9 +67,9 @@ const activated = env => {
 
             const token = req.params.token;
 
-            const owner = await env.models.users.getForToken(token);
+            const owner = await env.models.users.getForToken(token, 'activation');
             owner.activated = true;
-            await env.models.update(owner);
+            await env.models.users.update(owner);
 
             await env.models.tokens.deleteAllForUser(owner.id, "activation");
 
