@@ -15,7 +15,13 @@ const failedValidationResponse = (res, errors) => {
     errorResponse(res, 422, errors);
 }
 
+const invalidCredentialsResponse = (res) => {
+    const msg = "invalid credentials"
+    res.status(401).send(msg);
+}
+
 module.exports = {
     serverErrorResponse,
-    failedValidationResponse
+    failedValidationResponse,
+    invalidCredentialsResponse
 }

@@ -3,7 +3,7 @@
 const sanitizer = require("../helpers/sanitizer");
 const sendMail = require('../helpers/email');
 const { Validator } = require('node-input-validator');
-const { failedValidationResponse, serverErrorResponse } = require("../helpers/errors");
+const { failedValidationResponse, serverErrorResponse, invalidCredentialsResponse } = require("../helpers/errors");
 const { Conflict, NotFound } = require('../lib/errors/http_errors');
 
 const signup = env => {
@@ -85,7 +85,48 @@ const activated = env => {
     }
 }
 
+const login = env => {
+    return async (req, res) => {
+        try {
+            const input = {
+                email: req.body.email,
+                password: req.body.password,
+            };
+
+            const v = new Validator(input, {
+                email: 'required|email',
+                password: 'required|minLength:8|maxLength:100'
+            });
+
+            if (!await v.check()) {
+                failedValidationResponse(res, sanitizer.validationErr(v.errors));
+                return;
+            }
+
+            const user = await env.models.users.getByEmail(input.email);
+
+            if (!await env.models.users.validatePassword(user.password_hash, input.password)) {
+                invalidCredentialsResponse(res);
+                return
+            }
+
+            const ttl = new Date();
+            ttl.setHours(ttl.getHours() + 24);
+            const token = await env.models.tokens.create(user.id, ttl, "authentication");
+
+            res.status(201).send({authentication_token: token.plain})
+        } catch (err) {
+            if (err instanceof NotFound) {
+                invalidCredentialsResponse(res);
+                return
+            }
+            serverErrorResponse(res, err);
+        }
+    }
+}
+
 module.exports = {
     signup,
-    activated
+    activated,
+    login
 }
