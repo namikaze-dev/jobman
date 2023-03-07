@@ -99,8 +99,8 @@ class UserModel {
         return await bcrypt.hash(password, 10);
     }
 
-    async validatePassword(password, providedPassword) {
-        return await bcrypt.compare(password, providedPassword);
+    async validatePassword(passwordHash, providedPassword) {
+        return await bcrypt.compare(providedPassword, passwordHash.toString());
     }
 }
 
