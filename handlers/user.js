@@ -31,8 +31,12 @@ const signup = env => {
             const user = await env.models.users.insert(input);
 
             setImmediate(async () => {
+                const ttl = new Date();
+                ttl.setHours(ttl.getHours() + 72);
+                const token = await env.models.tokens.create(user.id, ttl, "activation");
+
                 try {
-                    await sendMail(user.email, "Welcome to Jobman", "user_welcome", { token: null })
+                    await sendMail(user.email, "Welcome to Jobman", "user_welcome", { token: token.plain })
                 } catch (err) {
                     console.error(err);
                 }
@@ -67,7 +71,7 @@ const activated = env => {
             owner.activated = true;
             await env.models.update(owner);
 
-            // TODO: delete token for user
+            await env.models.tokens.deleteAllForUser(owner.id, "activation");
 
             res.status(201).send(sanitizer.user(owner));
         } catch (err) {
@@ -76,7 +80,7 @@ const activated = env => {
                 return;
             }
 
-            console.error(err);
+            serverErrorResponse(res, err);
         }
     }
 }
