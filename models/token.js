@@ -36,6 +36,14 @@ class TokenModel {
             [userId, token.hash, token.expiry, token.type]
         );
     }
+
+    async deleteAllForUser(userId, type) {
+        return await this.db.query(
+            `DELETE FROM tokens 
+              WHERE user_id = $1 AND type = $2`,
+            [userId, type]
+        );
+    }
 }
 
 
