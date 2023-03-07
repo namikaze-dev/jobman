@@ -76,7 +76,7 @@ class UserModel {
             const tokenHash = crypto.createHash('sha256').update(token).digest()
 
             const result = await this.db.query(
-                `SELECT name, email, password_hash, activated, version 
+                `SELECT id, name, email, password_hash, activated, version 
                   FROM users 
                   JOIN tokens ON id = user_id
                   WHERE hash = $1
