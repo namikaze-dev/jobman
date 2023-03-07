@@ -1,10 +1,12 @@
 const request = require('supertest');
 const appFactory = require('../../../app');
 const userModel = require('../../../models/mocks/user');
+const tokenModel = require('../../../models/mocks/token');
 
 const env = {
     models: {
-        users: userModel
+        users: userModel,
+        tokens: tokenModel
     }
 }
 
