@@ -20,8 +20,14 @@ const invalidCredentialsResponse = (res) => {
     res.status(401).send(msg);
 }
 
+const invalidAuthenticationTokenResponse = (res) => {
+    res.set("WWW-Authenticate", "Bearer");
+    res.status(401).send("invalid or missing authentication token");
+}
+
 module.exports = {
     serverErrorResponse,
     failedValidationResponse,
-    invalidCredentialsResponse
+    invalidCredentialsResponse,
+    invalidAuthenticationTokenResponse
 }
