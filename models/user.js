@@ -2,6 +2,7 @@
 
 const { Conflict, NotFound } = require('../lib/errors/http_errors');
 const bcrypt = require('bcrypt');
+const crypto = require('crypto');
 
 class UserModel {
     constructor(dbClient) {
@@ -72,6 +73,8 @@ class UserModel {
 
     async getForToken(token, type) {
         try {
+            const tokenHash = crypto.createHash('sha256').update(token).digest()
+
             const result = await this.db.query(
                 `SELECT name, email, password_hash, activated, version 
                   FROM users 
@@ -79,7 +82,7 @@ class UserModel {
                   WHERE hash = $1
                   AND type = $2
                   AND expiry > $3`,
-                [token, type, new Date()]
+                [tokenHash, type, new Date()]
             );
 
             if (result.rowCount == 0) {
