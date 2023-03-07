@@ -1,6 +1,6 @@
 'use strict'
 
-const { Conflict, BadRequest } = require("../lib/errors/http_errors");
+const { Conflict, BadRequest, NotFound } = require("../lib/errors/http_errors");
 
 class JobModel {
     constructor(dbClient) {
@@ -24,6 +24,24 @@ class JobModel {
                 throw new BadRequest('job missing required values')
             }
 
+            throw err;
+        }
+    }
+
+    async getById(id) {
+        try {
+            const result = await this.db.query(
+                `SELECT * FROM jobs
+                  WHERE id = $1`,
+                [id]
+            );
+
+            if (result.rowCount == 0) {
+                throw new NotFound('job with id does not exist')
+            }
+
+            return result.rows[0];
+        } catch (err) {
             throw err;
         }
     }
