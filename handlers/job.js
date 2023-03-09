@@ -180,7 +180,7 @@ const getAll = env => {
                 // pagination & sort params
                 page: parseInt(req.query.page) || 1,
                 page_size: parseInt(req.query.page_size) || 10,
-                sort: req.query.sort || ""
+                sort: req.query.sort || "id"
             }
 
             const v = new Validator(input, {
