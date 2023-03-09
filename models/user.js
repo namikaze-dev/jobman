@@ -23,7 +23,7 @@ class UserModel {
         } catch (err) {
             // code 23505 denotes error code of unique constraint violation
             if (err.code == '23505') {
-                throw new Conflict('user email conflict');
+                throw new Conflict('User with email already exists');
             } 
             throw err;
         }
@@ -36,7 +36,7 @@ class UserModel {
             const result = await this.db.query(stmt, [email]);
             
             if (result.rowCount == 0) {
-                throw new NotFound()
+                throw new NotFound('User with email does not exist')
             }
 
             return result.rows[0];
@@ -58,14 +58,14 @@ class UserModel {
 
             // race condition check
             if (result.rowCount == 0) {
-                throw new Conflict('edit conflict');
+                throw new Conflict('Edit conflict');
             }
 
             user.version = result.rows[0].version;
         } catch (err) {
             // code 23505 denotes error code of unique constraint violation
             if (err.code == '23505') {
-                throw new Conflict('user email edit conflict');
+                throw new Conflict('User with email already exists');
             }
             throw err;
         }
@@ -86,7 +86,7 @@ class UserModel {
             );
 
             if (result.rowCount == 0) {
-                throw new NotFound('no user exists for token')
+                throw new NotFound('No user exists for given token')
             }
 
             return result.rows[0];
