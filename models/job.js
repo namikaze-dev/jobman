@@ -46,10 +46,20 @@ class JobModel {
         }
     }
 
-    async getAll() {
+    async getAll(input) {
         try {
             const result = await this.db.query(
-                `SELECT * FROM jobs`,
+                `SELECT * FROM jobs
+                  WHERE (LOWER(title) = LOWER($1) OR $1 = '')
+                  AND (LOWER(company_name) = LOWER($2) OR $2 = '')
+                  AND (LOWER(company_market) = LOWER($3) OR $3 = '')
+                  AND (LOWER(location) = LOWER($4) OR $4 = '')
+                  AND (LOWER(type) = LOWER($5) OR $5 = '')
+                  AND (remote = $6 OR $6 = false)
+                  AND (skills @> $7 OR $7 = '{}')
+                  ORDER BY id`,
+                [input.title, input.company_name, input.company_market, input.location, 
+                  input.type, input.remote, input.skills]
             )
 
             return result.rows;

@@ -203,8 +203,6 @@ const getAll = env => {
                 return;
             }
 
-            console.log(input);
-
             const jobs = await env.models.jobs.getAll(input);
 
             res.status(200).send(sanitizer.job({ jobs: jobs }))
