@@ -143,8 +143,32 @@ const remove = env => {
     }
 }
 
+const get = env => {
+    return async (req, res) => {
+        try {
+            const id = parseInt(req.params.id);
+            if (!id) {
+                failedValidationResponse(res, { id: "id must be an integer number" });
+                return;
+            }
+
+            const job = await env.models.jobs.getById(id);
+
+            res.status(200).send(sanitizer.job(job))
+        } catch (err) {
+            if (err instanceof NotFound) {
+                notFoundResponse(res, err.message);
+                return;
+            }
+
+            serverErrorResponse(res, err);
+        }
+    }
+}
+
 module.exports = {
     create,
     update,
-    remove
+    remove,
+    get
 }
