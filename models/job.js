@@ -64,6 +64,22 @@ class JobModel {
             throw err;
         }
     }
+
+    async delete(id) {
+        try {
+            const result = await this.db.query(
+                `DELETE FROM jobs
+                  WHERE id = $1`,
+                [id]
+            )
+
+            if (result.rowCount == 0) {
+                throw new NotFound('movie with given id does not exist');
+            }
+        } catch (err) {
+            throw err;
+        }
+    }
 }
 
 module.exports = JobModel;
