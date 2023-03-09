@@ -12,6 +12,12 @@ const job = job => {
     return JSON.parse(JSON.stringify(job, jobReplacer));
 }
 
+const jobs = jobs => {
+    return jobs.map((j) => {
+        return job(j);
+    });
+}
+
 const userReplacer = (key, val) => {
     if (['', 'id', 'name', 'email', 'activated', 'created_at'].includes(key)) {
         return val;

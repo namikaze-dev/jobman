@@ -166,9 +166,22 @@ const get = env => {
     }
 }
 
+const getAll = env => {
+    return async (req, res) => {
+        try {
+            const jobs = await env.models.jobs.getAll();
+
+            res.status(200).send(sanitizer.job({ jobs: jobs }))
+        } catch (err) {
+            serverErrorResponse(res, err);
+        }
+    }
+}
+
 module.exports = {
     create,
     update,
     remove,
-    get
+    get,
+    getAll
 }
