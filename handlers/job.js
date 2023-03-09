@@ -40,7 +40,7 @@ const create = env => {
 
             const job = await env.models.jobs.insert(req.user.id, input);
 
-            res.send(sanitizer.job(job));
+            res.send(sanitizer.job({ job: job }));
         } catch (err) {
             serverErrorResponse(res, err);
         }
@@ -101,7 +101,7 @@ const update = env => {
 
             job = await env.models.jobs.update(job);
 
-            res.send(sanitizer.job(job));
+            res.send(sanitizer.job({ job: job }));
         } catch (err) {
             if (err instanceof NotFound) {
                 notFoundResponse(res, err.message);
@@ -154,7 +154,7 @@ const get = env => {
 
             const job = await env.models.jobs.getById(id);
 
-            res.status(200).send(sanitizer.job(job))
+            res.status(200).send(sanitizer.job({ job: job }))
         } catch (err) {
             if (err instanceof NotFound) {
                 notFoundResponse(res, err.message);

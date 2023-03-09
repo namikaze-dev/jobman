@@ -42,7 +42,7 @@ const signup = env => {
                 }
             })
 
-            res.status(201).send(sanitizer.user(user));
+            res.status(201).send(sanitizer.user({ user: user }));
         } catch (err) {
             if (err instanceof Conflict) {
                 failedValidationResponse(res, "a user with this email already exists");
@@ -73,7 +73,7 @@ const activated = env => {
 
             await env.models.tokens.deleteAllForUser(owner.id, "activation");
 
-            res.status(201).send(sanitizer.user(owner));
+            res.status(201).send(sanitizer.user({ user: owner }));
         } catch (err) {
             if (err instanceof NotFound) {
                 failedValidationResponse(res, { "token": "invalid/expired token" });
