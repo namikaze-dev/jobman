@@ -208,8 +208,6 @@ const getAll = env => {
                 [input.sort, input.sort_direction] = setupSortParam(input.sort);
             }
 
-            console.log(input);
-
             const jobs = await env.models.jobs.getAll(input);
 
             res.status(200).send(sanitizer.job({ jobs: jobs }))

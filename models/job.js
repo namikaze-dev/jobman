@@ -57,9 +57,10 @@ class JobModel {
                   AND (LOWER(type) = LOWER($5) OR $5 = '')
                   AND (remote = $6 OR $6 = false)
                   AND (skills @> $7 OR $7 = '{}')
-                  ORDER BY ${input.sort} ${input.sort_direction}, id ASC`,
+                  ORDER BY ${input.sort} ${input.sort_direction}, id ASC
+                  LIMIT $8 OFFSET (($9 - 1) * $8)`,
                 [input.title, input.company_name, input.company_market, input.location, 
-                  input.type, input.remote, input.skills]
+                  input.type, input.remote, input.skills, input.page_size, input.page]
             )
 
             return result.rows;
