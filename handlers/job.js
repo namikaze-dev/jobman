@@ -180,7 +180,7 @@ const getAll = env => {
                 // pagination & sort params
                 page: parseInt(req.query.page) || 1,
                 page_size: parseInt(req.query.page_size) || 10,
-                sort: req.query.sort || "id"
+                sort: req.query.sort || "id",
             }
 
             const v = new Validator(input, {
@@ -203,6 +203,13 @@ const getAll = env => {
                 return;
             }
 
+            input.sort_direction = 'ASC';
+            if (input.sort) {
+                [input.sort, input.sort_direction] = setupSortParam(input.sort);
+            }
+
+            console.log(input);
+
             const jobs = await env.models.jobs.getAll(input);
 
             res.status(200).send(sanitizer.job({ jobs: jobs }))
@@ -210,6 +217,10 @@ const getAll = env => {
             serverErrorResponse(res, err);
         }
     }
+}
+
+const setupSortParam = param => {
+    return param.startsWith('-') ? [param.slice(1), 'DESC'] : [param, 'ASC']
 }
 
 module.exports = {

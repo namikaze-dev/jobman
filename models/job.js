@@ -57,7 +57,7 @@ class JobModel {
                   AND (LOWER(type) = LOWER($5) OR $5 = '')
                   AND (remote = $6 OR $6 = false)
                   AND (skills @> $7 OR $7 = '{}')
-                  ORDER BY id`,
+                  ORDER BY ${input.sort} ${input.sort_direction}, id ASC`,
                 [input.title, input.company_name, input.company_market, input.location, 
                   input.type, input.remote, input.skills]
             )
