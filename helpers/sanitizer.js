@@ -20,9 +20,15 @@ const userReplacer = (key, val) => {
 };
 
 const validationErrReplacer = (key, val) => {
+    const excluded = [
+        'name', 'email', 'password', 'token', 'title', 'description',
+        'company_name', 'apply_url', 'type', 'company_market', 'skills',
+        'location', 'remote'
+    ]
+
     if (key == 'rule') {
         return undefined;
-    } else if (['name', 'email', 'password', 'token'].includes(key)) {
+    } else if (excluded.includes(key)) {
         return val.message;
     }
     return val;
