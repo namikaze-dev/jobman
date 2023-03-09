@@ -7,32 +7,33 @@ const errorResponse = (res, code, msg) => {
 
 const serverErrorResponse = (res, err) => {
     console.error(err);
-    const msg = "the server encountered a problem and could not process your request"
-    res.status(500).send(msg);
+    const msg = "the server encountered a problem and could not process your request";
+    errorResponse(res, 500, msg);
 }
 
 const failedValidationResponse = (res, errors) => {
     errorResponse(res, 422, errors);
 }
 
-const invalidCredentialsResponse = (res) => {
-    const msg = "invalid credentials"
-    res.status(401).send(msg);
+const invalidCredentialsResponse = (res, msg) => {
+    msg = msg || "invalid credentials";
+    errorResponse(res, 401, msg);
 }
 
-const invalidAuthenticationTokenResponse = (res) => {
+const invalidAuthenticationTokenResponse = (res, msg) => {
     res.set("WWW-Authenticate", "Bearer");
-    res.status(401).send("invalid or missing authentication token");
+    msg = msg || "invalid or missing authentication token";
+    errorResponse(res, 401, msg);
 }
 
 const forbiddenResponse = (res, msg) => {
     msg = msg || "Forbidden";
-    res.status(403).send(msg);
+    errorResponse(res, 403, msg);
 }
 
 const notFoundResponse = (res, msg) => {
     msg = msg || "Not Found";
-    res.status(404).send(msg);
+    errorResponse(res, 404, msg);
 }
 
 module.exports = {
