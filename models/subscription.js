@@ -35,6 +35,22 @@ class SubscriptionModel {
 
         return result.rows[0];
     }
+
+    async add(userId, tags) {
+        const subscription = await this.get(userId);
+
+        subscription.tags.push(...tags);
+
+        const result = await this.db.query(
+            `UPDATE subscriptions
+              SET tags = $1, version = version + 1
+              WHERE user_id = $2 AND version = $3
+              RETURNING *`,
+            [subscription.tags, userId, subscription.version]
+        );
+
+        return result.rows[0];
+    }
 }
 
 
