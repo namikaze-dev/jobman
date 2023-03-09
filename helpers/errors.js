@@ -25,9 +25,21 @@ const invalidAuthenticationTokenResponse = (res) => {
     res.status(401).send("invalid or missing authentication token");
 }
 
+const forbiddenResponse = (res, msg) => {
+    msg = msg || "Forbidden";
+    res.status(403).send(msg);
+}
+
+const notFoundResponse = (res, msg) => {
+    msg = msg || "Not Found";
+    res.status(404).send(msg);
+}
+
 module.exports = {
     serverErrorResponse,
     failedValidationResponse,
     invalidCredentialsResponse,
-    invalidAuthenticationTokenResponse
+    invalidAuthenticationTokenResponse,
+    forbiddenResponse,
+    notFoundResponse
 }
