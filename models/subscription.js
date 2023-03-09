@@ -1,5 +1,7 @@
 'use strict'
 
+const { NotFound } = require("../lib/errors/http_errors");
+
 class SubscriptionModel {
     constructor(client) {
         this.db = client;
@@ -14,6 +16,22 @@ class SubscriptionModel {
               `,
             [userId, []]
         );
+
+        return result.rows[0];
+    }
+
+    async get(userId) {
+        const result = await this.db.query(
+            `SELECT subscriptions.id, tags, active, subscriptions.created_at, subscriptions.version
+              FROM subscriptions
+              JOIN users on users.id = user_id
+              WHERE user_id = $1`,
+            [userId]
+        );
+
+        if (result.rowCount == 0) {
+            throw new NotFound('No subscription exists for current user ')
+        }
 
         return result.rows[0];
     }
