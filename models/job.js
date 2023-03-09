@@ -1,6 +1,6 @@
 'use strict'
 
-const { Conflict, BadRequest, NotFound } = require("../lib/errors/http_errors");
+const { BadRequest, NotFound } = require("../lib/errors/http_errors");
 
 class JobModel {
     constructor(dbClient) {
@@ -60,7 +60,6 @@ class JobModel {
 
     async update(job) {
         try {
-            // user_id, title, description, company_name, type, skills, location, remote, apply_url
             const result = await this.db.query(
                 `UPDATE jobs
                   SET title = $1, description = $2, company_name = $3, type = $4, skills = $5, 
