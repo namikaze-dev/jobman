@@ -46,6 +46,18 @@ class JobModel {
         }
     }
 
+    async getAll() {
+        try {
+            const result = await this.db.query(
+                `SELECT * FROM jobs`,
+            )
+
+            return result.rows;
+        } catch (err) {
+            throw err;
+        }
+    }
+
     async update(job) {
         try {
             // user_id, title, description, company_name, type, skills, location, remote, apply_url
