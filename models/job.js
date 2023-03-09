@@ -21,7 +21,7 @@ class JobModel {
             return result.rows[0];
         } catch (err) {
             if (err.code == '23502') {
-                throw new BadRequest('job missing required values')
+                throw new BadRequest('Job is missing required values')
             }
 
             throw err;
@@ -37,7 +37,7 @@ class JobModel {
             );
 
             if (result.rowCount == 0) {
-                throw new NotFound('job with id does not exist')
+                throw new NotFound('Job with given id does not exist')
             }
 
             return result.rows[0];
@@ -85,7 +85,7 @@ class JobModel {
             )
 
             if (result.rowCount == 0) {
-                throw new NotFound('movie with given id does not exist');
+                throw new NotFound('Job with given id does not exist');
             }
         } catch (err) {
             throw err;
