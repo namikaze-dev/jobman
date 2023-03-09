@@ -45,6 +45,25 @@ class JobModel {
             throw err;
         }
     }
+
+    async update(job) {
+        try {
+            // user_id, title, description, company_name, type, skills, location, remote, apply_url
+            const result = await this.db.query(
+                `UPDATE jobs
+                  SET title = $1, description = $2, company_name = $3, type = $4, skills = $5, 
+                    location = $6, remote = $7, apply_url = $8, version = version + 1
+                  WHERE id = $9 AND version = $10
+                  RETURNING *`,
+                [job.title, job.description, job.company_name, job.type, job.skills,
+                job.location, job.remote, job.apply_url, job.id, job.version]
+            )
+
+            return result.rows[0];
+        } catch (err) {
+            throw err;
+        }
+    }
 }
 
 module.exports = JobModel;
