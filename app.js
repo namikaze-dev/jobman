@@ -10,6 +10,7 @@ module.exports = (env) => {
 
     // register routes
     app.use(require('./routes/user')(env));
+    app.use(require("./routes/job")(env));
 
     return app;
 }

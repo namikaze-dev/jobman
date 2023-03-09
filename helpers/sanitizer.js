@@ -8,6 +8,10 @@ const user = user => {
     return JSON.parse(JSON.stringify(user, userReplacer));
 };
 
+const job = job => {
+    return JSON.parse(JSON.stringify(job, jobReplacer));
+}
+
 const userReplacer = (key, val) => {
     if (['', 'id', 'name', 'email', 'activated', 'created_at'].includes(key)) {
         return val;
@@ -24,7 +28,20 @@ const validationErrReplacer = (key, val) => {
     return val;
 };
 
+const jobReplacer = (key, val) => {
+    if (val == null) {
+        return undefined;
+    }
+
+    if (['user_id','version'].includes(key)) {
+        return undefined;
+    }
+
+    return val;
+}
+
 module.exports = {
     user,
-    validationErr
+    validationErr,
+    job
 }
