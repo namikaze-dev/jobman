@@ -37,6 +37,7 @@ class SubscriptionModel {
     }
 
     async add(userId, tags) {
+        tags = tags.map(tag => tag.toLowerCase());
         const subscription = await this.get(userId);
 
         subscription.tags.push(...tags);
