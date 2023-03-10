@@ -29,77 +29,61 @@ class JobModel {
     }
 
     async getById(id) {
-        try {
-            const result = await this.db.query(
-                `SELECT * FROM jobs
-                  WHERE id = $1`,
-                [id]
-            );
+        const result = await this.db.query(
+            `SELECT * FROM jobs
+              WHERE id = $1`,
+            [id]
+        );
 
-            if (result.rowCount == 0) {
-                throw new NotFound('Job with given id does not exist')
-            }
-
-            return result.rows[0];
-        } catch (err) {
-            throw err;
+        if (result.rowCount == 0) {
+            throw new NotFound('Job with given id does not exist')
         }
+
+        return result.rows[0];
     }
 
     async getAll(input) {
-        try {
-            const result = await this.db.query(
-                `SELECT * FROM jobs
-                  WHERE (to_tsvector('simple', title) @@ plainto_tsquery('simple', $1) OR $1 = '')
-                  AND (to_tsvector('simple', company_name) @@ plainto_tsquery('simple', $2) OR $2 = '')
-                  AND (to_tsvector('simple', company_market) @@ plainto_tsquery('simple', $3) OR $3 = '')
-                  AND (to_tsvector('simple', location) @@ plainto_tsquery('simple', $4) OR $4 = '')
-                  AND (LOWER(type) = LOWER($5) OR $5 = '')
-                  AND (remote = $6 OR $6 = false)
-                  AND (skills @> $7 OR $7 = '{}')
-                  ORDER BY ${input.sort} ${input.sort_direction}, id ASC
-                  LIMIT $8 OFFSET (($9 - 1) * $8)`,
-                [input.title, input.company_name, input.company_market, input.location, 
-                  input.type, input.remote, input.skills, input.page_size, input.page]
-            )
+        const result = await this.db.query(
+            `SELECT * FROM jobs
+              WHERE (to_tsvector('simple', title) @@ plainto_tsquery('simple', $1) OR $1 = '')
+              AND (to_tsvector('simple', company_name) @@ plainto_tsquery('simple', $2) OR $2 = '')
+              AND (to_tsvector('simple', company_market) @@ plainto_tsquery('simple', $3) OR $3 = '')
+              AND (to_tsvector('simple', location) @@ plainto_tsquery('simple', $4) OR $4 = '')
+              AND (LOWER(type) = LOWER($5) OR $5 = '')
+              AND (remote = $6 OR $6 = false)
+              AND (skills @> $7 OR $7 = '{}')
+              ORDER BY ${input.sort} ${input.sort_direction}, id ASC
+              LIMIT $8 OFFSET (($9 - 1) * $8)`,
+            [input.title, input.company_name, input.company_market, input.location,
+            input.type, input.remote, input.skills, input.page_size, input.page]
+        )
 
-            return result.rows;
-        } catch (err) {
-            throw err;
-        }
+        return result.rows;
     }
 
     async update(job) {
-        try {
-            const result = await this.db.query(
-                `UPDATE jobs
-                  SET title = $1, description = $2, company_name = $3, type = $4, skills = $5, 
-                    location = $6, remote = $7, apply_url = $8, version = version + 1
-                  WHERE id = $9 AND version = $10
-                  RETURNING *`,
-                [job.title, job.description, job.company_name, job.type, job.skills,
-                job.location, job.remote, job.apply_url, job.id, job.version]
-            )
+        const result = await this.db.query(
+            `UPDATE jobs
+              SET title = $1, description = $2, company_name = $3, type = $4, skills = $5, 
+                location = $6, remote = $7, apply_url = $8, version = version + 1
+              WHERE id = $9 AND version = $10
+              RETURNING *`,
+            [job.title, job.description, job.company_name, job.type, job.skills,
+            job.location, job.remote, job.apply_url, job.id, job.version]
+        )
 
-            return result.rows[0];
-        } catch (err) {
-            throw err;
-        }
+        return result.rows[0];
     }
 
     async delete(id) {
-        try {
-            const result = await this.db.query(
-                `DELETE FROM jobs
+        const result = await this.db.query(
+            `DELETE FROM jobs
                   WHERE id = $1`,
-                [id]
-            )
+            [id]
+        )
 
-            if (result.rowCount == 0) {
-                throw new NotFound('Job with given id does not exist');
-            }
-        } catch (err) {
-            throw err;
+        if (result.rowCount == 0) {
+            throw new NotFound('Job with given id does not exist');
         }
     }
 }
