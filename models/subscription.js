@@ -52,6 +52,28 @@ class SubscriptionModel {
 
         return result.rows[0];
     }
+
+    async remove(userId, tags) {
+        tags = tags.map(tag => tag.toLowerCase());
+        const subscription = await this.get(userId);
+
+        subscription.tags = subscription.tags.filter(tag => {
+            if (tags.includes(tag)) {
+                return false;
+            }
+            return true;
+        });
+
+        const result = await this.db.query(
+            `UPDATE subscriptions
+              SET tags = $1, version = version + 1
+              WHERE user_id = $2 AND version = $3
+              RETURNING *`,
+            [subscription.tags, userId, subscription.version]
+        );
+
+        return result.rows[0];
+    }
 }
 
 
