@@ -74,6 +74,22 @@ class SubscriptionModel {
 
         return result.rows[0];
     }
+
+    async setActiveStatus(userId, status) {
+        const result = await this.db.query(
+            `UPDATE subscriptions
+              SET active = $1
+              WHERE user_id = $2
+              RETURNING *`,
+            [status, userId]
+        );
+
+        if (result.rowCount == 0) {
+            throw new NotFound('No subscription exists for current user ');
+        }
+
+        return result.rows[0];
+    }
 }
 
 
