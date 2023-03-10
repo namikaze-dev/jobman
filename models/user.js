@@ -31,18 +31,14 @@ class UserModel {
 
 
     async getByEmail(email) {
-        try {
-            const stmt = 'SELECT * FROM  users WHERE email = $1';
-            const result = await this.db.query(stmt, [email]);
-            
-            if (result.rowCount == 0) {
-                throw new NotFound('User with email does not exist')
-            }
+        const stmt = 'SELECT * FROM  users WHERE email = $1';
+        const result = await this.db.query(stmt, [email]);
 
-            return result.rows[0];
-        } catch (err) {
-            throw err;
+        if (result.rowCount == 0) {
+            throw new NotFound('User with email does not exist')
         }
+
+        return result.rows[0];
     }
 
     async update(user) {
@@ -72,27 +68,23 @@ class UserModel {
     }
 
     async getForToken(token, type) {
-        try {
-            const tokenHash = crypto.createHash('sha256').update(token).digest()
+        const tokenHash = crypto.createHash('sha256').update(token).digest()
 
-            const result = await this.db.query(
-                `SELECT id, name, email, password_hash, activated, version 
+        const result = await this.db.query(
+            `SELECT id, name, email, password_hash, activated, version 
                   FROM users 
                   JOIN tokens ON id = user_id
                   WHERE hash = $1
                   AND type = $2
                   AND expiry > $3`,
-                [tokenHash, type, new Date()]
-            );
+            [tokenHash, type, new Date()]
+        );
 
-            if (result.rowCount == 0) {
-                throw new NotFound('No user exists for given token')
-            }
-
-            return result.rows[0];
-        } catch (err) {
-            throw err;
+        if (result.rowCount == 0) {
+            throw new NotFound('No user exists for given token')
         }
+
+        return result.rows[0];
     }
 
     async hashPassword(password) {
