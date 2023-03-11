@@ -250,9 +250,9 @@ const subscribe = env => {
             }
 
             const user = await env.models.users.getByEmail(paymentIntent.receipt_email);
-            const result = await env.models.subscription.create(user.id);
+            await env.models.subscription.create(user.id);
 
-            res.send(result);
+            res.send({ message: "Subscription Success" });
         } catch (err) {
             if (err.code == '23505') {
                 res.send({ "message": "user is already subscribed" })
