@@ -1,6 +1,7 @@
 'use strict'
 
 const { Validator } = require('node-input-validator');
+const stripe = require("stripe")(process.env.STRIPE_KEY);
 const { failedValidationResponse, serverErrorResponse, forbiddenResponse, notFoundResponse } = require("../helpers/errors");
 const sanitizer = require("../helpers/sanitizer");
 const { NotFound } = require("../lib/errors/http_errors");
@@ -217,6 +218,26 @@ const getAll = env => {
     }
 }
 
+const createPaymentIntent = env => {
+    return async (req, res) => {
+        try {
+            const amount = process.env.SUBSCRIPTION_COST;
+
+            const paymentIntent = await stripe.paymentIntents.create({
+                amount: parseInt(amount),
+                currency: "usd",
+                automatic_payment_methods: {
+                    enabled: true,
+                },
+            });
+
+            res.send({ clientSecret: paymentIntent.client_secret });
+        } catch (err) {
+            serverErrorResponse(res, err);
+        }
+    }
+}
+
 const setupSortParam = param => {
     return param.startsWith('-') ? [param.slice(1), 'DESC'] : [param, 'ASC']
 }
@@ -226,5 +247,6 @@ module.exports = {
     update,
     remove,
     get,
-    getAll
+    getAll,
+    createPaymentIntent
 }
