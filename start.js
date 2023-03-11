@@ -1,9 +1,10 @@
 'use strict'
 
-const db = require('./config/db');
-const Models = new require('../jobman/models/base.js');
-const appFactory = require('./app');
 require('dotenv').config();
+
+const db = require('./config/db');
+const Models = require('../jobman/models/base.js');
+const appFactory = require('./app');
 
 // setup dependencies
 const env = {
