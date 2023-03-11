@@ -114,6 +114,10 @@ const login = env => {
             ttl.setHours(ttl.getHours() + 24);
             const token = await env.models.tokens.create(user.id, ttl, "authentication");
 
+            setImmediate(async (id) => {
+                await env.models.tokens.deleteAllForUser(id, "authentication");
+            }, user.id);
+
             res.status(201).send({authentication_token: token.plain})
         } catch (err) {
             if (err instanceof NotFound) {
