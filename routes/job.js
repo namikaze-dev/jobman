@@ -2,16 +2,16 @@
 
 const Router = require('express').Router;
 const { create, update, remove, get, getAll } = require('../handlers/job');
-const { authenticate } = require('../lib/middlewares')
+const { authenticate, activate } = require('../lib/middlewares')
 
 const router = Router();
 
 module.exports = (env) => {
     router.get("/jobs/:id", get(env));
     router.get("/jobs", getAll(env));
-    router.post("/jobs", authenticate(env), create(env));
-    router.put("/jobs/:id", authenticate(env), update(env));
-    router.delete("/jobs/:id", authenticate(env), remove(env));
+    router.post("/jobs", authenticate(env), activate(env), create(env));
+    router.put("/jobs/:id", authenticate(env), activate(env), update(env));
+    router.delete("/jobs/:id", authenticate(env), activate(env), remove(env));
 
     return router;
 };
