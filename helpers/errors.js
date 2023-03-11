@@ -36,11 +36,17 @@ const notFoundResponse = (res, msg) => {
     errorResponse(res, 404, msg);
 }
 
+const inactiveAccountResponse = (res, msg) => {
+    msg = msg || "User account must be activated to access this resource";
+    errorResponse(res, 403, msg);
+}
+
 module.exports = {
     serverErrorResponse,
     failedValidationResponse,
     invalidCredentialsResponse,
     invalidAuthenticationTokenResponse,
     forbiddenResponse,
-    notFoundResponse
+    notFoundResponse,
+    inactiveAccountResponse
 }
