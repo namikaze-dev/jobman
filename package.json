@@ -12,6 +12,7 @@
     "lib": "lib"
   },
   "dependencies": {
+    "amqplib": "^0.10.3",
     "base32": "0.0.7",
     "date-fns": "^2.29.3",
     "dotenv": "^16.0.3",
