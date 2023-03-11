@@ -8,6 +8,7 @@ module.exports = (env) => {
     const app = express();
 
     // register middlewares
+    app.use(express.static("templates"));
     app.use(express.json());
 
     // register routes
