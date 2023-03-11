@@ -238,6 +238,31 @@ const createPaymentIntent = env => {
     }
 }
 
+const subscribe = env => {
+    return async (req, res) => {
+        try {
+            const paymentIntent = await stripe.paymentIntents.retrieve(req.query.payment_intent);
+
+            if (paymentIntent.status != 'succeeded') {
+                console.log(`payment-intent: ${paymentIntent}`);
+                forbiddenResponse(res, "Invalid payment");
+                return;
+            }
+
+            const user = await env.models.users.getByEmail(paymentIntent.receipt_email);
+            const result = await env.models.subscription.create(user.id);
+
+            res.send(result);
+        } catch (err) {
+            if (err.code == '23505') {
+                res.send({ "message": "user is already subscribed" })
+            }
+
+            serverErrorResponse(res, err);
+        }
+    }
+}
+
 const setupSortParam = param => {
     return param.startsWith('-') ? [param.slice(1), 'DESC'] : [param, 'ASC']
 }
@@ -248,5 +273,6 @@ module.exports = {
     remove,
     get,
     getAll,
-    createPaymentIntent
+    createPaymentIntent,
+    subscribe
 }
