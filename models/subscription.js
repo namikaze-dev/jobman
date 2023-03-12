@@ -38,7 +38,11 @@ class SubscriptionModel {
         tags = tags.map(tag => tag.toLowerCase());
         const subscription = await this.get(userId);
 
-        subscription.tags.push(...tags);
+        tags.forEach(tag => {
+            if (!subscription.tags.includes(tag)) {
+                subscription.tags.push(tag);
+            }
+        });
 
         const result = await this.db.query(
             `UPDATE subscriptions
