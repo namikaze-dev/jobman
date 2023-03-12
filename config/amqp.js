@@ -12,4 +12,5 @@ export default {
     sendChan,
     receiveChan,
     createJobQueue: "CREATE_JOB",
+    sendEmailQueue: "SEND_EMAIL"
 };
