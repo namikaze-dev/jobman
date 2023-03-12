@@ -1,4 +1,4 @@
-export const sendJob = async (chan, queue, job) => {
+export default async (chan, queue, job) => {
     await chan.assertQueue(queue, { durable: true });
 
     const content = JSON.stringify(job);
