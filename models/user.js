@@ -87,6 +87,17 @@ class UserModel {
         return result.rows[0];
     }
 
+    async getSubscribersDetails() {
+        const result = await this.db.query(
+            `SELECT email, tags FROM users
+              JOIN subscriptions
+              ON users.id = user_id
+              WHERE active = true`
+        );
+
+        return result.rows;
+    }
+
     async hashPassword(password) {
         return await bcrypt.hash(password, 10);
     }
