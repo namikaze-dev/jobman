@@ -1,23 +1,16 @@
-'use strict'
+import pg from 'pg';
+import dotenv from 'dotenv';
 
-const { Pool } = require('pg');
+dotenv.config();
 
 const dsn = process.env.DSN;
+const client = new pg.Client(dsn);
 
-const client = new Pool({
-    host: 'localhost',
-    user: 'jobman',
-    password: 'jobmanpassword',
-    database: 'jobman'
+client.on('connect', () => {
+    console.log('db connect success');
 });
 
-client.connect()
-    .then(_ => {
-        console.log('db connect success');
-    })
-    .catch(err => {
-        console.log('db connect failed, error:', err.message);
-        process.exit(1)
-    })
+await client.connect();
 
-module.exports = client;
+
+export default client;

@@ -1,16 +1,14 @@
-'use strict'
-
-const Router = require('express').Router;
-const { signup, activated, login } = require('../handlers/user');
+import { Router } from 'express';
+import * as hd from '../handlers/user.js';
 
 const route = env => {
     const router = Router();
 
-    router.post('/signup', signup(env));
-    router.post('/activated/:token', activated(env));
-    router.get('/login', login(env));
+    router.post('/signup', hd.signup(env));
+    router.post('/activated/:token', hd.activated(env));
+    router.get('/login', hd.login(env));
 
     return router;
 }
 
-module.exports = route;
+export default route;

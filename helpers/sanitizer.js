@@ -1,5 +1,3 @@
-'use strict'
-
 const validationErr = errors => {
     return JSON.parse(JSON.stringify(errors, validationErrReplacer));
 };
@@ -52,8 +50,9 @@ const jobReplacer = (key, val) => {
     return val;
 }
 
-module.exports = {
+export default {
     user,
     validationErr,
-    job
-}
+    job,
+    jobs
+};

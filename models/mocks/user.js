@@ -1,7 +1,3 @@
-'use strict'
-
-const date = require('date-fns');
-
 const userModel = {
     _users: [
         {
@@ -40,7 +36,7 @@ const userModel = {
             email: user.email,
             password_hash: user.password_hash,
             activated: false,
-            created_at: date.formatISO(Date.now()),
+            created_at: new Date(),
             version: 1,
         }
         this._users.push(user)
@@ -52,4 +48,4 @@ const userModel = {
     }
 }
 
-module.exports = userModel;
+export default userModel;

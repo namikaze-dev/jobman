@@ -1,6 +1,4 @@
-'use strict'
-
-const { BadRequest, NotFound } = require("../lib/errors/http_errors");
+import { BadRequest, NotFound } from '../lib/errors/http_errors.js';
 
 class JobModel {
     constructor(dbClient) {
@@ -88,4 +86,4 @@ class JobModel {
     }
 }
 
-module.exports = JobModel;
+export default JobModel;

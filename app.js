@@ -1,10 +1,8 @@
-'use strict'
+import express from 'express';
+import users from './routes/user.js';
+import jobs from './routes/job.js';
 
-const express = require('express');
-const users = require('./routes/user');
-const jobs = require("./routes/job");
-
-module.exports = (env) => {
+export default (env) => {
     const app = express();
 
     // register middlewares
@@ -16,4 +14,4 @@ module.exports = (env) => {
     app.use(jobs(env));
 
     return app;
-}
+};

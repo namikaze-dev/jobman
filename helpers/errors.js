@@ -1,5 +1,3 @@
-'use strict'
-
 const errorResponse = (res, code, msg) => {
     msg = { "error": msg };
     res.status(code).send(msg);
@@ -41,7 +39,7 @@ const inactiveAccountResponse = (res, msg) => {
     errorResponse(res, 403, msg);
 }
 
-module.exports = {
+export {
     serverErrorResponse,
     failedValidationResponse,
     invalidCredentialsResponse,
@@ -49,4 +47,4 @@ module.exports = {
     forbiddenResponse,
     notFoundResponse,
     inactiveAccountResponse
-}
+};

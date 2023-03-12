@@ -1,6 +1,4 @@
-'use strict'
-
-const { NotFound } = require("../lib/errors/http_errors");
+import { NotFound } from '../lib/errors/http_errors.js';
 
 class SubscriptionModel {
     constructor(client) {
@@ -92,8 +90,4 @@ class SubscriptionModel {
     }
 }
 
-
-
-module.exports = {
-    SubscriptionModel
-}
+export default SubscriptionModel;

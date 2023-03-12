@@ -1,7 +1,7 @@
-const request = require('supertest');
-const appFactory = require('../../../app');
-const userModel = require('../../../models/mocks/user');
-const tokenModel = require('../../../models/mocks/token');
+import request from 'supertest';
+import appFactory from '../../../app.js';
+import userModel from '../../../models/mocks/user.js';
+import tokenModel from '../../../models/mocks/token.js';
 
 const env = {
     models: {

@@ -1,4 +1,4 @@
-const { generateToken, TokenModel } = require('../../../models/token');
+import { generateToken } from '../../../models/token.js';
 
 describe('generateToken', () => {
 

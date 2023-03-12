@@ -1,8 +1,8 @@
 'use strict'
 
-const { Conflict, NotFound } = require('../lib/errors/http_errors');
-const bcrypt = require('bcrypt');
-const crypto = require('crypto');
+import { Conflict, NotFound } from '../lib/errors/http_errors.js';
+import bcrypt from 'bcrypt';
+import crypto from 'crypto';
 
 class UserModel {
     constructor(dbClient) {
@@ -96,4 +96,4 @@ class UserModel {
     }
 }
 
-module.exports = UserModel;
+export default UserModel;

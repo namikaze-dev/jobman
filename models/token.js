@@ -1,9 +1,7 @@
-'use strict'
+import crypto from 'crypto';
+import base32 from 'base32';
 
-const crypto = require('crypto');
-const base32 = require('base32');
-
-const generateToken = (userId, expiry, type) => {
+export const generateToken = (userId, expiry, type) => {
     const token = {
         user_id: userId,
         expiry,
@@ -48,7 +46,4 @@ class TokenModel {
 
 
 
-module.exports = {
-    generateToken,
-    TokenModel
-}
+export default TokenModel;

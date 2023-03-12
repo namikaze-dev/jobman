@@ -1,6 +1,4 @@
-'use strict'
-
-const crypto = require('crypto');
+import crypto from 'crypto';
 
 const tokenModel = {
     async create(id, expiry, type) {
@@ -11,4 +9,4 @@ const tokenModel = {
     }
 }
 
-module.exports = tokenModel;
+export default tokenModel;

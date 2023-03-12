@@ -1,23 +1,13 @@
-'use strict'
+import amqp from 'amqplib';
+import dotenv from 'dotenv';
 
-const SERVER = 'amqps://rnecsina:cedh9fYdRIE8FFat376U-s2VAwiQ3P7R@puffin.rmq2.cloudamqp.com/rnecsina';
-const NEW_JOB_QUEUE = 'new-job';
+dotenv.config();
 
+const conn = await amqp.connect(process.env.AMQP_SERVER);
+const sendChan = await conn.createChannel();
+const receiveChan = await conn.createChannel();
 
-const amqp = require('amqplib');
-
-let conn;
-let sendChan;
-let receiveChan
-
-amqp.connect(SERVER).then(async c => {
-    conn = c;
-
-    sendChan = await conn.createChannel();
-    receiveChan = await conn.createChannel();
-});
-
-module.exports = {
+export default {
     conn,
     sendChan,
     receiveChan

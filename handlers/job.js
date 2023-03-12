@@ -1,10 +1,10 @@
-'use strict'
+import { Validator } from 'node-input-validator';
+import stripeFactory from 'stripe';
+import * as errors from '../helpers/errors.js';
+import sanitizer from '../helpers/sanitizer.js';
+import { NotFound } from '../lib/errors/http_errors.js';
 
-const { Validator } = require('node-input-validator');
-const stripe = require("stripe")(process.env.STRIPE_KEY);
-const { failedValidationResponse, serverErrorResponse, forbiddenResponse, notFoundResponse } = require("../helpers/errors");
-const sanitizer = require("../helpers/sanitizer");
-const { NotFound } = require("../lib/errors/http_errors");
+const stripe = stripeFactory(process.env.STRIPE_KEY);
 
 const create = env => {
     return async (req, res) => {
@@ -34,8 +34,8 @@ const create = env => {
                 remote: 'boolean'
             });
 
-            if (!await v.check()) {
-                failedValidationResponse(res, sanitizer.validationErr(v.errors));
+            if (!(await v.check())) {
+                errors.failedValidationResponse(res, sanitizer.validationErr(v.errors));
                 return;
             }
 
@@ -43,9 +43,9 @@ const create = env => {
 
             res.send(sanitizer.job({ job: job }));
         } catch (err) {
-            serverErrorResponse(res, err);
+            errors.serverErrorResponse(res, err);
         }
-    }
+    };
 }
 
 const update = env => {
@@ -53,7 +53,7 @@ const update = env => {
         try {
             const id = parseInt(req.params.id);
             if (!id) {
-                failedValidationResponse(res, { id: "id must be an integer number" });
+                errors.failedValidationResponse(res, { id: "id must be an integer number" });
                 return;
             }
 
@@ -82,15 +82,15 @@ const update = env => {
                 remote: 'boolean'
             });
 
-            if (!await v.check()) {
-                failedValidationResponse(res, sanitizer.validationErr(v.errors));
+            if (!(await v.check())) {
+                errors.failedValidationResponse(res, sanitizer.validationErr(v.errors));
                 return;
             }
 
             let job = await env.models.jobs.getById(id);
 
             if (req.user.id != job.user_id) {
-                forbiddenResponse(res);
+                errors.forbiddenResponse(res);
                 return;
             }
 
@@ -105,13 +105,13 @@ const update = env => {
             res.send(sanitizer.job({ job: job }));
         } catch (err) {
             if (err instanceof NotFound) {
-                notFoundResponse(res, err.message);
+                errors.notFoundResponse(res, err.message);
                 return
             }
 
-            serverErrorResponse(res, err);
+            errors.serverErrorResponse(res, err);
         }
-    }
+    };
 }
 
 const remove = env => {
@@ -119,14 +119,14 @@ const remove = env => {
         try {
             const id = parseInt(req.params.id);
             if (!id) {
-                failedValidationResponse(res, { id: "id must be an integer number" });
+                errors.failedValidationResponse(res, { id: "id must be an integer number" });
                 return;
             }
 
             let job = await env.models.jobs.getById(id);
 
             if (req.user.id != job.user_id) {
-                forbiddenResponse(res);
+                errors.forbiddenResponse(res);
                 return;
             }
 
@@ -135,11 +135,11 @@ const remove = env => {
             res.status(200).send({ message: "Delete Ok" })
         } catch (err) {
             if (err instanceof NotFound) {
-                notFoundResponse(res, err.message);
+                errors.notFoundResponse(res, err.message);
                 return;
             }
 
-            serverErrorResponse(res, err);
+            errors.serverErrorResponse(res, err);
         }
     }
 }
@@ -149,7 +149,7 @@ const get = env => {
         try {
             const id = parseInt(req.params.id);
             if (!id) {
-                failedValidationResponse(res, { id: "id must be an integer number" });
+                errors.failedValidationResponse(res, { id: "id must be an integer number" });
                 return;
             }
 
@@ -158,11 +158,11 @@ const get = env => {
             res.status(200).send(sanitizer.job({ job: job }))
         } catch (err) {
             if (err instanceof NotFound) {
-                notFoundResponse(res, err.message);
+                errors.notFoundResponse(res, err.message);
                 return;
             }
 
-            serverErrorResponse(res, err);
+            errors.serverErrorResponse(res, err);
         }
     }
 }
@@ -199,8 +199,8 @@ const getAll = env => {
                 sort: 'string|in:id,title,company_name,-id,-title,-company_name'
             });
 
-            if (!await v.check()) {
-                failedValidationResponse(res, sanitizer.validationErr(v.errors));
+            if (!(await v.check())) {
+                errors.failedValidationResponse(res, sanitizer.validationErr(v.errors));
                 return;
             }
 
@@ -213,9 +213,9 @@ const getAll = env => {
 
             res.status(200).send(sanitizer.job({ jobs: jobs }))
         } catch (err) {
-            serverErrorResponse(res, err);
+            errors.serverErrorResponse(res, err);
         }
-    }
+    };
 }
 
 const createPaymentIntent = env => {
@@ -233,7 +233,7 @@ const createPaymentIntent = env => {
 
             res.send({ clientSecret: paymentIntent.client_secret });
         } catch (err) {
-            serverErrorResponse(res, err);
+            errors.serverErrorResponse(res, err);
         }
     }
 }
@@ -245,7 +245,7 @@ const subscribe = env => {
 
             if (paymentIntent.status != 'succeeded') {
                 console.log(`payment-intent: ${paymentIntent}`);
-                forbiddenResponse(res, "Invalid payment");
+                errors.forbiddenResponse(res, "Invalid payment");
                 return;
             }
 
@@ -258,7 +258,7 @@ const subscribe = env => {
                 res.send({ "message": "user is already subscribed" })
             }
 
-            serverErrorResponse(res, err);
+            errors.serverErrorResponse(res, err);
         }
     }
 }
@@ -267,7 +267,7 @@ const setupSortParam = param => {
     return param.startsWith('-') ? [param.slice(1), 'DESC'] : [param, 'ASC']
 }
 
-module.exports = {
+export {
     create,
     update,
     remove,
@@ -275,4 +275,4 @@ module.exports = {
     getAll,
     createPaymentIntent,
     subscribe
-}
+};

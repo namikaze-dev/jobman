@@ -1,16 +1,12 @@
-'use strict'
-
-require('dotenv').config();
-
-const db = require('./config/db');
-const ampq = require('./config/amqp');
-const Models = require('../jobman/models/base.js');
-const appFactory = require('./app');
+import db from './config/db.js';
+import amqp from './config/amqp.js';
+import Models from '../jobman/models/base.js';
+import appFactory from './app.js';
 
 // setup dependencies
 const env = {
     models: new Models(db),
-    ampq: ampq
+    amqp: amqp
 };
 
 const app = appFactory(env);
