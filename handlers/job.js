@@ -1,5 +1,6 @@
 import { Validator } from 'node-input-validator';
 import stripeFactory from 'stripe';
+import { sendJob } from "../helpers/amqp.js";
 import * as errors from '../helpers/errors.js';
 import sanitizer from '../helpers/sanitizer.js';
 import { NotFound } from '../lib/errors/http_errors.js';
@@ -40,6 +41,15 @@ const create = env => {
             }
 
             const job = await env.models.jobs.insert(req.user.id, input);
+
+            // queue new job
+            setImmediate(async (job) => {
+                try {
+                    await sendJob(env.amqp.sendChan, env.amqp.createJobQueue, job);
+                } catch (err) {
+                    console.error(err);
+                }
+            }, job);
 
             res.send(sanitizer.job({ job: job }));
         } catch (err) {
