@@ -10,5 +10,6 @@ const receiveChan = await conn.createChannel();
 export default {
     conn,
     sendChan,
-    receiveChan
+    receiveChan,
+    createJobQueue: "CREATE_JOB",
 };
