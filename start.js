@@ -2,12 +2,15 @@ import db from './config/db.js';
 import amqp from './config/amqp.js';
 import Models from '../jobman/models/base.js';
 import appFactory from './app.js';
+import jobSubscriber from './subscribers/job.js';
 
 // setup dependencies
 const env = {
     models: new Models(db),
     amqp: amqp
 };
+
+await jobSubscriber(env);
 
 const app = appFactory(env);
 
