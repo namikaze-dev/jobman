@@ -12,7 +12,7 @@ const listener = async (env) => {
 
         const content = JSON.parse(msg.content.toString());
 
-        await send(content.recipient, "New Job", "new_job", content.job)
+        await send(content.recipient, "New Job Post", "new_job", content.job)
     });
 }
 
