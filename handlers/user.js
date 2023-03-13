@@ -34,13 +34,15 @@ const signup = env => {
                 const token = await env.models.tokens.create(user.id, ttl, "activation");
 
                 try {
-                    await sendMail(user.email, "Welcome to Jobman", "user_welcome", { token: token.plain })
+                    await sendMail(user.email, "Welcome to Jobman", "user_welcome", { 
+                        token: token.plain,
+                        server: process.env.SERVER 
+                    });
                 } catch (err) {
                     console.error(err);
                 }
             })
 
-            console.log(user);
             res.status(201).send({ user: sanitizer.user(user) });
         } catch (err) {
             if (err instanceof Conflict) {
