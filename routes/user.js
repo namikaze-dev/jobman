@@ -5,7 +5,7 @@ const route = env => {
     const router = Router();
 
     router.post('/signup', hd.signup(env));
-    router.post('/activated/:token', hd.activated(env));
+    router.get('/activated/:token', hd.activated(env));
     router.get('/login', hd.login(env));
 
     return router;

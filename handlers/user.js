@@ -43,7 +43,7 @@ const signup = env => {
                 }
             })
 
-            res.status(201).send({ user: sanitizer.user(user) });
+            res.status(201).send({ user: sanitizer.user(owner) });
         } catch (err) {
             if (err instanceof Conflict) {
                 errors.failedValidationResponse(res, "a user with this email already exists");
