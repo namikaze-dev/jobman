@@ -13,7 +13,7 @@ const transporter = nodemailer.createTransport({
 });
 
 const send = async (recipient, subject, tmplName, data) => {
-    const source = await fs.readFile(path.resolve(__dirname, "../templates", tmplName + ".html"), 'utf-8');
+    const source = await fs.readFile(path.resolve(path.dirname(process.argv[1]), "./templates", tmplName + ".html"), 'utf-8');
     const template = handlebars.compile(source);
 
     const options = {
