@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>New Job Post</title>
+  </head>
+  <body>
+    <p>Hi,</p>
+    <p>A new job post matched your subscription, details:</p>
+    <p>title: {{ title }}</p>
+    <p>company: {{ company_name }}</p>
+    <p>type: {{ type }}</p>
+    {{#if skills}}
+    <p>skills: {{ skills }}</p>
+    {{/if}}
+    <p>remote: {{ remote }}</p>
+    <p><a href="{{ apply_url }}">Click here</a> to apply.</p>
+  </body>
+</html>
